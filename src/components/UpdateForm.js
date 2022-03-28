@@ -3,11 +3,9 @@ import Constants from '../utilities/Constants'
 
 export default function UpdateForm(props) {
   const defaultData = Object.freeze({
-    id: props.todo.id,
     title: props.todo.title,
     desc: props.todo.description,
-    deadline: props.todo.deadlineDate,
-    create: props.todo.createdDate
+    deadline: props.todo.deadlineDate
   });
   const [formData, setFormData] = useState(defaultData);
 
@@ -22,14 +20,12 @@ export default function UpdateForm(props) {
     e.preventDefault();
 
     const updateTodo = {
-      id: props.todo.id,
       title: formData.title,
       description: formData.desc,
-      deadlineDate: formData.deadline,
-      createdDate: props.todo.createdDate
+      deadlineDate: formData.deadline
     }
 
-    const url = Constants.API_URL_UPDATE_TODO;
+    const url = `${Constants.API_URL_UPDATE_TODO}/${props.todo.id}`;
 
     fetch(url, {
       method: 'PUT',
@@ -41,12 +37,12 @@ export default function UpdateForm(props) {
       .then(response => response.json())
       .then(todos => {
         console.log(todos);
+        props.onTodoUpdated(updateTodo);
       })
       .catch((error) => {
         console.log(error);
-        alert(error);
+        alert('Date is incorrect! Try again!');
       });
-    props.onTodoUpdated(updateTodo);
   };
 
   return (
@@ -69,8 +65,8 @@ export default function UpdateForm(props) {
           <input type="date" data-date-format="DD.MM.YYYY" value={formData.deadline} name='deadline' className='form-control' onChange={handleChange} />
         </div>
 
-        <button className='btn btn-success btn-lg mt-5' onClick={submit}>Submit</button>
-        <button className='btn btn-danger btn-lg mt-5' onClick={() => props.onTodoUpdated(null)}>Cancel</button>
+        <button className='btn btn-success btn-lg mt-2' onClick={submit}>Submit</button>
+        <button className='btn btn-danger btn-lg mt-2' onClick={() => props.onTodoUpdated(null)}>Cancel</button>
       </form>
     </div>
   )

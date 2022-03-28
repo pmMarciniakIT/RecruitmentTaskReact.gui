@@ -5,7 +5,7 @@ export default function CreateForm(props) {
   const defaultData = Object.freeze({
     title: 'Test title',
     desc: 'Test description',
-    deadline: ''
+    deadline: new Date().toISOString().slice(0,10)
   });
   const [formData, setFormData] = useState(defaultData);
   const handleChange = (e) => {
@@ -36,12 +36,13 @@ export default function CreateForm(props) {
       .then(response => response.json())
       .then(todos => {
         console.log(todos);
+        props.onTodoCreated(createTodo);
       })
       .catch((error) => {
         console.log(error);
-        alert(error);
+        alert('Date is incorrect! Try again!');
       });
-    props.onTodoCreated(createTodo);
+
   };
 
   return (
@@ -61,7 +62,7 @@ export default function CreateForm(props) {
 
         <div>
           <label>Deadline Date</label>
-          <input value={formData.deadline} name='deadline' type='date' className='form-control' onChange={handleChange} />
+          <input data-date-format="DD.MM.YYYY" value={formData.deadline} name='deadline' type='date' className='form-control' onChange={handleChange} />
         </div>
 
         <button className='btn btn-success btn-lg mt-5' onClick={submit}>Submit</button>
